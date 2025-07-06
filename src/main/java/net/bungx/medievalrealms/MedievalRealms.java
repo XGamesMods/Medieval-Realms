@@ -1,6 +1,9 @@
 package net.bungx.medievalrealms;
 
 import com.mojang.logging.LogUtils;
+import net.bungx.medievalrealms.block.ModBlocks;
+import net.bungx.medievalrealms.item.ModItems;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -26,6 +29,9 @@ public class MedievalRealms {
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -37,6 +43,11 @@ public class MedievalRealms {
 
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(CreativeModeTabs.COMBAT)) {
+            event.accept(ModItems.EXAMPLE);
+        } else if (event.getTabKey().equals(CreativeModeTabs.BUILDING_BLOCKS)) {
+            event.accept(ModBlocks.EXAMPLE_BLOCK);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
